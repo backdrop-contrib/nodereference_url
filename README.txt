@@ -9,8 +9,7 @@ This Module Made by Robots: http://www.lullabot.com
 
 Dependencies
 ------------
- * nodereference (part of CCK)
- * content (part of CCK)
+ * Node Reference (part of References)
 
 Install
 -------
@@ -19,9 +18,9 @@ Installing the Node Reference URL Widget is simple:
 1) Copy the nodereference_url folder to the sites/all/modules folder in your
    installation.
 
-2) Enable the module using Administer -> Modules (admin/build/modules)
+2) Enable the module using Administer -> Modules (admin/modules)
 
-3) Add or edit a CCK Node Reference field from admin/content/node-type/[type]/fields.
+3) Add or edit a Node Reference field from admin/structure/types/manage/[type]/fields.
    When configuring the field, use the "Reference from URL" option.
 
 4) Follow on-screen help text to configure your Node Reference URL Widget.
