@@ -189,7 +189,8 @@ function nodereference_url_create_link($node, $field_name, $type_name, $attribut
   $field['widget']['node_link']['full'] = TRUE;
   if ($link = nodereference_url_build_link($node, $field)) {
     $options = array();
-    $options['attributes'] = $attributes + (array) $link['attributes'];
+    $link_attributes = is_set($link['attributes']) ? (array) $link['attributes'] : array();
+    $options['attributes'] = $attributes + $link_attributes;
     if ($link['query']) {
       $options['query'] = $link['query'];
     }
