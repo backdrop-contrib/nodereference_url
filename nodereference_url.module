@@ -20,11 +20,11 @@ function nodereference_url_theme() {
  * Implements hook_form_alter().
  */
 function nodereference_url_form_alter(&$form, &$form_state, $form_id) {
-  if ($form_id == 'content_field_edit_form' && isset($form['#field']) && $form['#field']['widget']['type'] == 'nodereference_url') {
+  if ($form_id == 'field_ui_field_edit_form' && isset($form['#instance']) && $form['#instance']['widget']['type'] == 'nodereference_url') {
     // Hide settings that don't apply to this widget.
-    $form['field']['multiple']['#type'] = 'value';
-    $form['widget']['description']['#title'] = t('Fallback widget help text');
-    $form['widget']['description']['#weight'] = -1;
+    $form['field']['cardinality']['#type'] = 'value';
+    $form['instance']['description']['#title'] = t('Fallback widget help text');
+    $form['instance']['description']['#weight'] = -1;
   }
 }
 
