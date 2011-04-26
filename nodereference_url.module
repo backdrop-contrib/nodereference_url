@@ -42,10 +42,6 @@ function nodereference_url_field_widget_info() {
         'node_link' => array(),
         'edit_fallback' => 0,
       ),
-      'behaviors' => array(
-        'multiple values' => FIELD_BEHAVIOR_DEFAULT,
-        'default value' => FIELD_BEHAVIOR_DEFAULT,
-      ), 
     ),
   );
 }
@@ -336,16 +332,6 @@ function nodereference_url_fallback_validate($element, &$form_state) {
 }
 
 /**
- * FAPI #element_validate callback for the nodereference_autocomplete widget.
- *
- * This function doesn't actually validate, it just reformats form_state value
- * into an array of a suitable format for nodereference module
- */
-function nodereference_url_autocomplete_validate($element, &$form_state) {
-  form_set_value($element, array($form_state['values'][$element['#field_name']]), $form_state);
-}
-
-/**
  * Element validation function that makes title required when creating a link.
  */
 function nodereference_url_node_link_validate($element, &$form_state, $form) {
@@ -422,7 +408,7 @@ function nodereference_url_field_widget_form(&$form, &$form_state, $field, $inst
   }
 
   if (isset($referenced_nid) && (empty($element['#type']))) {
-    $element['nid'] = array(
+    $element += array(
       '#title' => $instance['label'],
       '#type' => 'nodereference_url',
       '#field_name' => $field_name,
@@ -430,7 +416,7 @@ function nodereference_url_field_widget_form(&$form, &$form_state, $field, $inst
     );
   }
 
-  return $element;
+  return array('nid' => $element);
 }
 
 /**
