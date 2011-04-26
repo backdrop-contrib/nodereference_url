@@ -75,19 +75,26 @@ function nodereference_url_node_view($node, $view_mode, $langcode) {
 function nodereference_url_build_all_links($node, $view_mode) {
   $links = array();
   $fields = field_info_instances('node');
+  $instances = array();
   foreach ($fields as $target_type => $field) {
     foreach ($field as $field_name => $instance) {
       if ($instance['widget']['type'] == 'nodereference_url') {
-        $link_settings = $instance['widget']['settings']['node_link'];
-        if (isset($link_settings[$view_mode])) {
-          $link = nodereference_url_build_link($node, $instance, $view_mode);
-          if ($link) {
-            $links[$target_type .'_'. $field_name] = $link;
-          }
-        }
+        $instances[$field_name] = $instance;
       }
     }
   }
+
+  $alt_format = count($instances) > 1;
+  foreach ($instances as $field_name => $instance) {
+    $link_settings = $instance['widget']['settings']['node_link'];
+    if (isset($link_settings[$view_mode])) {
+      $link = nodereference_url_build_link($node, $instance, $view_mode, $alt_format);
+      if ($link) {
+        $links[$target_type .'_'. $field_name] = $link;
+      }
+    }
+  }
+
   return $links;
 }
 
@@ -103,12 +110,15 @@ function nodereference_url_build_all_links($node, $view_mode) {
  * @param $field
  *   A CCK field instance.
  * @param $teaser
- *   Optional. The current display mode of the node. Defaults to FALSE.
+ *   Optional. The current display mode of the node. Defaults to 'full'.
+ * @param $alt_format
+ *   Optional. Use the alternative (safer but more verbose) format for
+ *   generating the link. Defaults to FALSE.
  *
  * @return
  *   An array containing properties to build a single link.
  */
-function nodereference_url_build_link($node, $field, $view_mode) {
+function nodereference_url_build_link($node, $field, $view_mode = 'full', $alt_format = FALSE) {
   $link = array();
 
   // Check if this widget is using a views listing.
@@ -124,27 +134,36 @@ function nodereference_url_build_link($node, $field, $view_mode) {
   if ($referenceable && node_access('create', $field['bundle'])) {
     $link_settings = $field['widget']['settings']['node_link'];
     if (!empty($link_settings[$view_mode])) {
+      $link['title'] = t($link_settings['title']);
+      $link['query'] = array();
+
       // Get the first "preferred" path for creating Node Reference links.
       $link_urls = variable_get('nodereference_url_paths', array('node/add/%type/%nid'));
 
       // Basic wildcard replacement: %type and %nid.
       $link_url = $link_urls[0];
       $link_url = str_replace('%type', str_replace('_', '-', $field['bundle']), $link_url);
-      $link_url = str_replace('%nid', $node->nid, $link_url);
+      if ($alt_format) {
+        // The alternative format is used when there are multiple fields on the
+        // node edit form, so we can't just add an parameter at the end for NID.
+        $link_url = preg_replace('!/%nid$!', '', $link_url);
+        $field_name = str_replace('field_', '', $field['field_name']);
+        $link['query'][$field_name] = $node->nid;
+      }
+      else {
+        $link_url = str_replace('%nid', $node->nid, $link_url);
+      }
+      $link['href'] = $link_url;
 
-      $link = array(
-        'title' => t($link_settings['title']),
-        'href' => $link_url,
-      );
       if (!empty($link_settings['hover_title'])) {
         $link['attributes']['title'] = t($link_settings['hover_title']);
       }
       if (!empty($link_settings['destination'])) {
         if ($link_settings['destination'] == 'source') {
-          $link['query'] = drupal_get_destination();
+          $link['query']['destination'] = isset($_REQUEST['destination']) ? $_REQUEST['destination'] : $_GET['q'];
         }
         elseif ($link_settings['destination'] == 'node') {
-          $link['query'] = array('destination' => drupal_get_path_alias('node/'. $node->nid));
+          $link['query']['destination'] = drupal_get_path_alias('node/'. $node->nid);
         }
       }
       if (module_exists('og')) {
@@ -157,7 +176,7 @@ function nodereference_url_build_link($node, $field, $view_mode) {
         }
 
         if ($group_entity) {
-          $link['query']['gids'] = $group_entity->gid;
+          $link['query']['gids'] = array($group_entity->gid);
         }
       }
     }
