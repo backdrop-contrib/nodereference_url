@@ -354,6 +354,10 @@ function nodereference_url_field_widget_form(&$form, &$form_state, $field, $inst
   if (isset($items[$delta]['nid']) && is_numeric($items[$delta]['nid'])) {
     $referenced_nid = $items[$delta]['nid'];
   }
+  // Check in the input array (used during AJAX requests).
+  if (isset($form_state['input'][$field_name][$langcode][$delta]['nid'])) {
+    $referenced_nid = $form_state['input'][$field_name][$langcode][$delta]['nid'];
+  }
   // Check for a reference in the query string.
   elseif (isset($_GET[$field_name_url]) && is_numeric($_GET[$field_name_url])) {
     $referenced_nid = $_GET[$field_name_url];
@@ -372,7 +376,7 @@ function nodereference_url_field_widget_form(&$form, &$form_state, $field, $inst
   }
 
   // If no NID is available or editing this field, use the fallback behavior.
-  if (empty($referenced_nid) || (!empty($instance['widget']['settings']['edit_fallback']) && !empty($items))) {
+  if (empty($referenced_nid) || (!empty($instance['widget']['settings']['edit_fallback']) && (empty($form['#node_edit_form']) || !empty($form['#node']->$field_name[$langcode])))) {
     // If not on a node/add page (such as editing a node that does not yet have
     // a reference), switch to using an autocomplete widget.
     if (in_array($fallback, array('page_not_found', 'leave_blank')) && nodereference_url_get_nid($field_name) === FALSE) {
@@ -434,7 +438,7 @@ function _nodereference_url_process($element, $form_state, $form) {
   }
 
   $element['nid'] = array(
-    '#type' => 'value',
+    '#type' => 'hidden',
     '#value' => isset($element['#value']) ? $element['#value'] : $element['#value'],
     '#parents' => $element['#parents'],
   );
@@ -493,5 +497,7 @@ function nodereference_url_get_nid($field_name) {
  */
 function theme_nodereference_url($variables) {
   $element = $variables['element'];
-  return $element['#display_title'];
+  $output = $element['#display_title'];
+  $output .= drupal_render_children($element);
+  return $output;
 }
