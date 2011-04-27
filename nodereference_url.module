@@ -355,7 +355,7 @@ function nodereference_url_field_widget_form(&$form, &$form_state, $field, $inst
     $referenced_nid = $items[$delta]['nid'];
   }
   // Check in the input array (used during AJAX requests).
-  if (isset($form_state['input'][$field_name][$langcode][$delta]['nid'])) {
+  elseif (!empty($form_state['input'][$field_name][$langcode][$delta]['nid'])) {
     $referenced_nid = $form_state['input'][$field_name][$langcode][$delta]['nid'];
   }
   // Check for a reference in the query string.
@@ -376,7 +376,7 @@ function nodereference_url_field_widget_form(&$form, &$form_state, $field, $inst
   }
 
   // If no NID is available or editing this field, use the fallback behavior.
-  if (empty($referenced_nid) || (!empty($instance['widget']['settings']['edit_fallback']) && (empty($form['#node_edit_form']) || !empty($form['#node']->$field_name[$langcode])))) {
+  if (empty($referenced_nid) || (!empty($instance['widget']['settings']['edit_fallback']) && (empty($form['#node_edit_form']) || !empty($form['#node']->{$field_name}[$langcode])))) {
     // If not on a node/add page (such as editing a node that does not yet have
     // a reference), switch to using an autocomplete widget.
     if (in_array($fallback, array('page_not_found', 'leave_blank')) && nodereference_url_get_nid($field_name) === FALSE) {
