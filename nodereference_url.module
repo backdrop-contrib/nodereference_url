@@ -119,7 +119,13 @@ function nodereference_url_build_link($node, $field, $view_mode = 'full', $alt_f
 
   // Check if this widget is using a views listing.
   if (module_exists('views') && isset($field['advanced_view']) && !empty($field['advanced_view']) && $field['advanced_view'] != '--') {
-    $referenceable = (bool) _node_reference_potential_references($field, '', NULL, array($node->nid), 1);
+    // TODO: Remove legacy function after final release of References module.
+    if (function_exists('node_reference_potential_references')) {
+      $referenceable = (bool) node_reference_potential_references($field, array('ids' => array($node->nid), 'limit' => 1));
+    }
+    else {
+      $referenceable = (bool) _node_reference_potential_references($field, '', NULL, array($node->nid), 1);
+    }
   }
   // Otherwise restrict by node type.
   else {
@@ -369,7 +375,13 @@ function nodereference_url_field_widget_form(&$form, &$form_state, $field, $inst
 
   // Check that the NID is a valid reference.
   if (!empty($referenced_nid)) {
-    $reference = _node_reference_potential_references($field, '', 'equals', array($referenced_nid), 1);
+    // TODO: Remove legacy function after final release of References module.
+    if (function_exists('node_reference_potential_references')) {
+      $reference = node_reference_potential_references($field, array('ids' => array($referenced_nid), 'limit' => 1));
+    }
+    else {
+      $reference = _node_reference_potential_references($field, '', 'equals', array($referenced_nid), 1);
+    }
     if (empty($reference)) {
       $referenced_nid = NULL;
     }
