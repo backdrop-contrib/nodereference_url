@@ -75,18 +75,19 @@ function nodereference_url_build_all_links($node, $view_mode) {
   foreach ($fields as $target_type => $field) {
     foreach ($field as $field_name => $instance) {
       if ($instance['widget']['type'] == 'nodereference_url') {
-        $instances[$field_name] = $instance;
+        $instances[$target_type][$field_name] = $instance;
       }
     }
   }
 
-  $alt_format = count($instances) > 1;
-  foreach ($instances as $field_name => $instance) {
-    $link_settings = $instance['widget']['settings']['node_link'];
-    if (isset($link_settings[$view_mode])) {
-      $link = nodereference_url_build_link($node, $instance, $view_mode, $alt_format);
-      if ($link) {
-        $links[$target_type .'_'. $field_name] = $link;
+  foreach ($instances as $target_type => $instances_group) {
+    $alt_format = count($instances_group) > 1;
+    foreach ($instances_group as $field_name => $instance) {
+      $link_settings = $instance['widget']['settings']['node_link'];
+      if (isset($link_settings[$view_mode])) {
+        if ($link = nodereference_url_build_link($node, $instance, $view_mode, $alt_format)) {
+          $links[$target_type .'_'. $field_name] = $link;
+        }
       }
     }
   }
