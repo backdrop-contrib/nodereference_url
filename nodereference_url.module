@@ -208,8 +208,8 @@ function nodereference_url_build_link($node, $field, $view_mode = 'full', $alt_f
  */
 function nodereference_url_create_link($node, $field_name, $type_name, $attributes = array()) {
   $output = '';
-  $field = content_fields($field_name, $type_name);
-  $field['widget']['node_link']['full'] = TRUE;
+  $field = field_info_instance('node', $field_name, $type_name);
+  $field['widget']['settings']['node_link']['full'] = TRUE;
   if ($link = nodereference_url_build_link($node, $field)) {
     $options = array();
     $link_attributes = isset($link['attributes']) ? (array) $link['attributes'] : array();
