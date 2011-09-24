@@ -170,7 +170,7 @@ function nodereference_url_build_link($node, $field, $view_mode = 'full', $alt_f
           $link['query']['destination'] = drupal_get_path_alias('node/'. $node->nid);
         }
       }
-      if (module_exists('og')) {
+      if (module_exists('og_context')) {
         // First try to get context based on the current page URL.
         $group_entity = og_get_context_by_url();
 
