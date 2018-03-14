@@ -6,6 +6,17 @@
  */
 
 /**
+ * Implements hook_config_info().
+ */
+function nodereference_url_config_info() {
+ $prefixes['nodereference_url.settings'] = array(
+   'label' => t('Node Reference URL Widget Settings'),
+   'group' => t('Configuration'),
+ );
+ return $prefixes;
+}
+
+/**
  * Implements hook_theme().
  */
 function nodereference_url_theme() {
@@ -145,7 +156,7 @@ function nodereference_url_build_link($node, $instance, $view_mode = 'full', $al
       $link['query'] = array();
 
       // Get the first "preferred" path for creating Node Reference links.
-      $link_urls = config_get('nodereference_url.settings', 'url_paths');
+      $link_urls = settings_get('nodereference_url_paths', config_get('nodereference_url.settings', 'url_paths'));
 
       // Basic wildcard replacement: %type and %nid.
       $link_url = $link_urls[0];
@@ -483,7 +494,7 @@ function _nodereference_url_process($element, $form_state, $form) {
  * Check the current URL and pull the referenced node from it.
  */
 function nodereference_url_get_nid($field_name) {
-  $add_urls = config_get('nodereference_url.settings', 'url_paths');
+  $add_urls = settings_get('nodereference_url_paths', config_get('nodereference_url.settings', 'url_paths'));
   $field_name_url = preg_replace('/^field_/', '', $field_name);
   $referenced_nid = NULL;
 

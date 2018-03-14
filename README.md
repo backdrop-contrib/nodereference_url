@@ -16,8 +16,8 @@ Installation
 Installing the Node Reference URL Widget is simple:
 
 1. Install this module using the official Backdrop CMS instructions at
-  https://backdropcms.org/guide/modules
-2. Enable the module using Administer -> Modules (admin/modules)
+  https://backdropcms.org/guide/modules.
+2. Enable the module using Administer -> Functionality (admin/modules).
 3. Add or edit a Node Reference field from admin/structure/types/manage/[type]/fields.
    When configuring the field, use the "Reference from URL" option.
 4. Follow on-screen help text to configure your Node Reference URL Widget.
@@ -29,10 +29,10 @@ Normally you can prepopulate a Node Reference URL widget simply by creating a
 link with the following structure:
 
 As HTML:
-<a href="/node/add/story/10">Add a story</a>
+`<a href="/node/add/story/10">Add a story</a>`
 
 Or in PHP code:
-<a href="<?php print url('node/add/story/' . $node->nid); ?>">Add a story</a>
+`<a href="<?php print url('node/add/story/' . $node->nid); ?>">Add a story</a>`
 
 However if using multiple Node Reference fields, you can populate them by
 using a query string instead of embedding the IDs directly in the URL. Assuming
@@ -40,29 +40,31 @@ you had two fields, named "field_ref_a" and "field_ref_b", the URL to
 prepopulate both of them at the same time would look like this:
 
 In HTML:
-<a href="/node/add/story?ref_a=10&ref_b=20">Add a story</a>
+`<a href="/node/add/story?ref_a=10&ref_b=20">Add a story</a>`
 
 Or in PHP code:
-<a href="<?php print url('node/add/story', array('query' => array('ref_a' => $nid1, 'ref_b' => $nid2))); ?>">Add a story</a>
+`<a href="<?php print url('node/add/story', array('query' => array('ref_a' => $nid1, 'ref_b' => $nid2))); ?>">Add a story</a>`
 
 Advanced: Support for non-standard URLs
 ---------------------------------------
 By default Node Reference URL Widget will only work with node form paths that
-match the standard Drupal install: "node/add/%type", where %type is a node type
+match the standard Drupal install: `node/add/%type`, where `%type` is a node type
 like "blog" or "story". If you want to use Node Reference URL Widget on
 non-standard URLs, you may do so by informing Node Reference URL Widget of these
 special paths.
 
 To do so, add additional paths to your settings.php with the following code:
 
-$conf['nodereference_url_paths'] = array(
+```
+$settings['nodereference_url_paths'] = array(
   'node/add/%type/%nid',
   'node/%/add/%type/%nid',
 );
+```
 
 Only two tokens are supported:
-%type: The node type that will be created.
-%nid: The node ID that will be referenced.
+`%type`: The node type that will be created.
+`%nid`: The node ID that will be referenced.
 
 The % wildcard may be used when including other dynamic IDs.
 
