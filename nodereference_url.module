@@ -65,7 +65,7 @@ function nodereference_url_node_view($node, $view_mode, $langcode) {
  * @param $node
  *   A fully loaded node object.
  * @param $teaser
- *   
+ *
  * @return
  *   An array of links for use with theme_links().
  */
@@ -145,7 +145,7 @@ function nodereference_url_build_link($node, $instance, $view_mode = 'full', $al
       $link['query'] = array();
 
       // Get the first "preferred" path for creating Node Reference links.
-      $link_urls = variable_get('nodereference_url_paths', array('node/add/%type/%nid'));
+      $link_urls = config_get('nodereference_url.settings', 'url_paths');
 
       // Basic wildcard replacement: %type and %nid.
       $link_url = $link_urls[0];
@@ -170,7 +170,7 @@ function nodereference_url_build_link($node, $instance, $view_mode = 'full', $al
           $link['query']['destination'] = isset($_REQUEST['destination']) ? $_REQUEST['destination'] : $_GET['q'];
         }
         elseif ($link_settings['destination'] == 'node') {
-          $link['query']['destination'] = drupal_get_path_alias('node/'. $node->nid);
+          $link['query']['destination'] = backdrop_get_path_alias('node/'. $node->nid);
         }
       }
       if (module_exists('og_context')) {
@@ -231,7 +231,7 @@ function nodereference_url_create_link($node, $field_name, $type_name, $attribut
  * Any FAPI callbacks needed for individual widgets can be declared here,
  * and the element will be passed to those callbacks for processing.
  *
- * Drupal will automatically theme the element using a theme with
+ * Backdrop will automatically theme the element using a theme with
  * the same name as the hook_elements key.
  *
  * Autocomplete_path is not used by text_widget but other widgets can use it
@@ -420,8 +420,8 @@ function nodereference_url_field_widget_form(&$form, &$form_state, $field, $inst
     // Check for the form_build_id to prevent throwing a page not found on
     // manual builds. See http://drupal.org/node/397606.
     if ($fallback == 'page_not_found') {
-      drupal_set_message(t('To create a new @type, a referenced piece of content must be specified in the link you followed.', array('@type' => $field['bundles']['node'][0])), 'error');
-      drupal_not_found();
+      backdrop_set_message(t('To create a new @type, a referenced piece of content must be specified in the link you followed.', array('@type' => $field['bundles']['node'][0])), 'error');
+      backdrop_not_found();
       exit();
     }
     // Fallback to select list.
@@ -483,7 +483,7 @@ function _nodereference_url_process($element, $form_state, $form) {
  * Check the current URL and pull the referenced node from it.
  */
 function nodereference_url_get_nid($field_name) {
-  $add_urls = variable_get('nodereference_url_paths', array('node/add/%type/%nid'));
+  $add_urls = config_get('nodereference_url.settings', 'url_paths');
   $field_name_url = preg_replace('/^field_/', '', $field_name);
   $referenced_nid = NULL;
 
@@ -531,6 +531,6 @@ function nodereference_url_get_nid($field_name) {
 function theme_nodereference_url($variables) {
   $element = $variables['element'];
   $output = $element['#display_title'];
-  $output .= drupal_render_children($element);
+  $output .= backdrop_render_children($element);
   return $output;
 }

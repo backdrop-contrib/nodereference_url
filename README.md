@@ -1,32 +1,30 @@
+Node Reference URL Widget
+=========================
 
 The Node Reference URL Widget module adds a new widget to the Node Reference
-CCK field type. It auto-populates a node reference field with a value from the
+field type. It auto-populates a node reference field with a value from the
 URL, and does not allow this value to be changed once set.
-
-Node Reference URL Widget was written by Nate Haug.
-
-This Module Made by Robots: http://www.lullabot.com
 
 Dependencies
 ------------
+
  * Node Reference (part of References)
 
-Install
--------
+Installation
+------------
+
 Installing the Node Reference URL Widget is simple:
 
-1) Copy the nodereference_url folder to the sites/all/modules folder in your
-   installation.
-
-2) Enable the module using Administer -> Modules (admin/modules)
-
-3) Add or edit a Node Reference field from admin/structure/types/manage/[type]/fields.
+1. Install this module using the official Backdrop CMS instructions at
+  https://backdropcms.org/guide/modules
+2. Enable the module using Administer -> Modules (admin/modules)
+3. Add or edit a Node Reference field from admin/structure/types/manage/[type]/fields.
    When configuring the field, use the "Reference from URL" option.
-
-4) Follow on-screen help text to configure your Node Reference URL Widget.
+4. Follow on-screen help text to configure your Node Reference URL Widget.
 
 Advanced: Build your own links
 ------------------------------
+
 Normally you can prepopulate a Node Reference URL widget simply by creating a
 link with the following structure:
 
@@ -71,13 +69,31 @@ The % wildcard may be used when including other dynamic IDs.
 In the above example, Node Reference URL Widget will work at either
 "node/add/story/2" or "node/1/add/story/2", where "2" is the node ID being
 referenced. Important to note: The first URL will be used in the links that Node
-Reference URL Widget provides. If needing advanced configuration of links, look
-into the Custom Links module: http://drupal.org/project/custom_links.
+Reference URL Widget provides.
 
 Support
 -------
 If you experience a problem with this module or have a problem, file a
 request or issue in the Node Reference URL Widget queue at
-http://drupal.org/project/issues/nodereference_url. DO NOT POST IN THE FORUMS.
+http://github.com/backdrop-contrib/nodereference_url/issues.
 Posting in the issue queues is a direct line of communication with the module
 authors.
+
+License
+-------
+
+This project is GPL v2 software. See the LICENSE.txt file in this directory for complete text.
+
+Current Maintainers
+-------------------
+
+Herb v/d Dool (https://github.com/herbdool/).
+
+Credits
+-------
+
+Ported to Backdrop by Herb v/d Dool.
+
+This module was originally written for Drupal by Nate Lampton (https://github.com/quicksketch).
+
+This Module Made by Robots: http://www.lullabot.com

@@ -1,0 +1,4 @@
+{
+    "_config_name": "nodereference_url.settings",
+    "url_paths": ["node/add/%type/%nid"]
+}
