@@ -3,3 +3,4 @@ description = Adds an additional widget to the Node Reference field that prepopu
 dependencies[] = node_reference
 package = Fields
 backdrop = 1.x
+type = module
