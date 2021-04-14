@@ -420,7 +420,14 @@ function nodereference_url_field_widget_form(&$form, &$form_state, $field, $inst
   }
 
   // If no NID is available or editing this field, use the fallback behavior.
-  if (empty($referenced_nid) || (!empty($instance['widget']['settings']['edit_fallback']) && (empty($form['#node_edit_form']) || !empty($form['#node']->{$field_name}[$langcode])))) {
+  $uses_fallback = empty($referenced_nid);
+
+  // Check for new nodes.
+  if (!$uses_fallback && isset($form['#node'])) {
+    $uses_fallback = (!empty($instance['widget']['settings']['edit_fallback']) && (!$form['#node']->isNew()));
+  }
+
+  if ($uses_fallback) {
     // If not on a node/add page (such as editing a node that does not yet have
     // a reference), switch to using an autocomplete widget.
     if (in_array($fallback, array('page_not_found', 'leave_blank')) && nodereference_url_get_nid($field_name) === FALSE) {
