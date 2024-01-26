@@ -1,0 +1,12 @@
+<?php
+
+/**
+ * Move nodereference_url settings from variables to config.
+ */
+function nodereference_url_update_1000() {
+  $config = config('nodereference_url.settings');
+  $config->set('url_paths', update_variable_get('nodereference_url_paths', array('node/add/%type/%nid')));
+  $config->save();
+
+  update_variable_del('nodereference_url_paths');
+}
